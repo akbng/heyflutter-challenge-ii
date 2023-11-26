@@ -63,13 +63,33 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFF391A49),
+            Color(0xFF301D5C),
+            Color(0xFF262171),
+            Color(0xFF301D5C),
+            Color(0xFF391A49),
+          ],
+          stops: [0.112, 0.324, 0.559, 0.693, 0.895],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Column(
           children: [
-            const Text("Add Location"),
+            Text(
+              "Add Location",
+              style:
+                  Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 24),
+            ),
             LocationAutoCompleteWidget(handleSelection: setselectedLocation),
+            const SizedBox(height: 16),
+            Text("Select Image:", style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 16),
             Expanded(
               child: _selectedLocationImages.isNotEmpty
@@ -78,8 +98,18 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
                       onSelect: setSelectedImage,
                     )
                   : const Center(
-                      child: Text(
-                          "Please select a location to before choosing an image"),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline_rounded,
+                            size: 48,
+                            color: Colors.white,
+                          ),
+                          SizedBox(height: 20),
+                          Text("Please select a location first"),
+                        ],
+                      ),
                     ),
             ),
             const SizedBox(height: 16),
@@ -106,7 +136,3 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
     );
   }
 }
-
-// 532229 - application id
-// Hdt48j6LVVFqNlyeqGZLJI6eNJ7kRu9o5nA03oAdPcw - access key
-// iazfES0GOwStaymmj6l9JT3zLMJdaTSGF7IDazSPdp0 - secret key
