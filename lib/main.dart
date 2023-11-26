@@ -39,7 +39,30 @@ class _AppState extends State<App> {
       body = HomeScreen(currentPos: position!);
     }
 
-    return MaterialApp(home: body);
+    return MaterialApp(
+      // default all texts to be white color
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.transparent,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+        ),
+        cardTheme: const CardTheme(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(24)),
+          ),
+        ),
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(
+            color: Colors.white,
+          ),
+          bodyMedium: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+      home: body,
+    );
   }
 
   Future<void> _fetchCurrentPosition() async {
