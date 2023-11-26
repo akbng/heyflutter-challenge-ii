@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/models/weather.dart';
 
+import '../services/weather_services.dart';
+
 class DailyForecastCard extends StatelessWidget {
   const DailyForecastCard({super.key, required this.forecast});
 
@@ -29,10 +31,15 @@ class DailyForecastCard extends StatelessWidget {
                       DateFormat('E dd').format(weather.date),
                       style: const TextStyle(color: Colors.white),
                     ),
-                    Image.asset(
-                      'assets/images/weather.png',
-                      height: 30,
-                    ),
+                    weather.icon == null
+                        ? Image.asset(
+                            "assets/images/weather.png",
+                            height: 30,
+                          )
+                        : Image.network(
+                            WeatherService.getIcon(iconId: weather.icon!),
+                            height: 50,
+                          ),
                     Text(
                       "${weather.temperature.round()}°C",
                       style: const TextStyle(color: Colors.white),

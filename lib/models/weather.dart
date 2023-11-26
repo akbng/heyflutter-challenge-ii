@@ -1,6 +1,6 @@
 class Weather {
   final String condition;
-
+  final int conditionId;
   final double temperature;
   final double humidity;
   final double pressure;
@@ -8,10 +8,12 @@ class Weather {
   final double realFeel;
   final double? minTemp;
   final double? maxTemp;
+  final String? icon;
   final DateTime date;
 
   Weather({
     required this.condition,
+    required this.conditionId,
     required this.temperature,
     required this.humidity,
     required this.windSpeed,
@@ -20,6 +22,7 @@ class Weather {
     required this.date,
     this.minTemp,
     this.maxTemp,
+    this.icon,
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) {
@@ -33,6 +36,8 @@ class Weather {
       date: DateTime.fromMillisecondsSinceEpoch(json['dt'].toInt() * 1000),
       minTemp: json['main']?['temp_min']?.toDouble(),
       maxTemp: json['main']?['temp_max']?.toDouble(),
+      icon: json['weather'][0]['icon'],
+      conditionId: json['weather'][0]['id'],
     );
   }
 
@@ -41,6 +46,8 @@ class Weather {
       'weather': [
         {
           'main': condition,
+          'icon': icon,
+          'id': conditionId,
         }
       ],
       'main': {

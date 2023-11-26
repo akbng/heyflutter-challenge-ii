@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_app/models/weather.dart';
 import 'package:weather_app/models/weather_forecast.dart';
@@ -10,6 +11,9 @@ class WeatherService {
   final String apiKey = dotenv.get('OPENWEATHER_API');
 
   WeatherService();
+
+  static String getIcon({String iconId = '01d'}) =>
+      'https://openweathermap.org/img/wn/$iconId@2x.png';
 
   Future<WeatherForecast> getWeatherForecast({
     required num lat,

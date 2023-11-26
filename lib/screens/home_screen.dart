@@ -124,10 +124,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Column(
           children: [
-            Image.asset(
-              "assets/images/weather.png",
-              height: 16.h,
-            ),
+            _forecast?.currentWeather.icon == null
+                ? Image.asset(
+                    "assets/images/weather.png",
+                    height: 16.h,
+                  )
+                : Image.network(
+                    WeatherService.getIcon(
+                        iconId: _forecast!.currentWeather.icon!),
+                  ),
             Text(
               _forecast?.currentWeather.condition ?? "loading",
               style: const TextStyle(

@@ -115,10 +115,15 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      'assets/images/weather.png',
-                      height: 30,
-                    ),
+                    _weather?.icon == null
+                        ? Image.asset(
+                            "assets/images/weather.png",
+                            height: 30,
+                          )
+                        : Image.network(
+                            WeatherService.getIcon(iconId: _weather!.icon!),
+                            height: 50,
+                          ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       textBaseline: TextBaseline.alphabetic,
