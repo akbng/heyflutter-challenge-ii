@@ -30,7 +30,7 @@ class LocationSearchbarWidget extends StatelessWidget {
       onPressed: () {
         _showSearchBar(context);
       },
-      icon: const Icon(Icons.search, color: Colors.white, size: 40),
+      icon: const Icon(Icons.search_rounded, color: Colors.white, size: 40),
     );
   }
 }
@@ -72,17 +72,39 @@ class MySearchDelegate extends SearchDelegate<Location?> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           // TODO: add error handling with snapshot.hasError
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(
-                    '${snapshot.data?[index].name}, ${snapshot.data?[index].country}'),
-                onTap: () {
-                  close(context, snapshot.data?[index]);
-                },
-              );
-            },
-            itemCount: snapshot.data?.length ?? 0,
+          if (snapshot.data != null && snapshot.data!.isNotEmpty) {
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                return ListTile(
+                  iconColor: Colors.white,
+                  textColor: Colors.white,
+                  leading: const Icon(Icons.location_on),
+                  title: Text(
+                    '${snapshot.data?[index].name}, ${snapshot.data?[index].country}',
+                  ),
+                  onTap: () {
+                    close(context, snapshot.data?[index]);
+                  },
+                );
+              },
+              itemCount: snapshot.data?.length ?? 0,
+            );
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error_outline_rounded,
+                  size: 100,
+                  color: Colors.white,
+                ),
+                Text(
+                  "No Locations Found!",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
+            ),
           );
         } else {
           return const Center(

@@ -63,6 +63,47 @@ class _LocationAutoCompleteWidgetState
     return Autocomplete<LocationSuggestion>(
       displayStringForOption: (option) =>
           "${option.cityName}, ${option.country}",
+      fieldViewBuilder: (BuildContext context,
+          TextEditingController textEditingController,
+          FocusNode focusNode,
+          VoidCallback onFieldSubmitted) {
+        return TextField(
+          controller: textEditingController,
+          focusNode: focusNode,
+          onSubmitted: (text) {
+            onFieldSubmitted();
+          },
+        );
+      },
+      optionsViewBuilder: (BuildContext context,
+          AutocompleteOnSelected<LocationSuggestion> onSelected,
+          Iterable<LocationSuggestion> options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 4.0,
+            child: SizedBox(
+              height: 200,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(4),
+                itemCount: options.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final option = options.elementAt(index);
+                  return GestureDetector(
+                    onTap: () {
+                      onSelected(option);
+                    },
+                    child: ListTile(
+                      title: Text(option.cityName),
+                      subtitle: Text(option.country),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
       optionsBuilder: (TextEditingValue textEditingValue) async {
         final Iterable<LocationSuggestion>? options =
             await _debouncedSearch(textEditingValue.text);
