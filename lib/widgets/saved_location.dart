@@ -18,7 +18,7 @@ class SavedLocationWidget extends StatefulWidget {
 }
 
 class _SavedLocationWidgetState extends State<SavedLocationWidget> {
-  final _weatherService = WeatherService('e71d0b53dfb243b161d181f13a8d99fd');
+  final _weatherService = WeatherService();
 
   Weather? _weather;
 
@@ -63,23 +63,57 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
       child: Card(
           elevation: 0,
           color: const Color(0xFFAAA5A5).withOpacity(0.5),
-          margin: const EdgeInsets.symmetric(vertical: 8),
+          margin: const EdgeInsets.symmetric(vertical: 10),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(widget.savedLocation.name),
-                    Text(_weather?.condition ?? ""),
-                    const SizedBox(height: 20),
-                    Text("Humidity ${_weather?.humidity}%"),
-                    Text("Wind ${_weather?.windSpeed}km/h"),
-                  ],
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.savedLocation.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      Text(_weather?.condition ?? "",
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          const Text("Humidity "),
+                          Text(
+                            "${_weather?.humidity.round() ?? 0}%",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Text("Wind "),
+                          Text(
+                            "${_weather?.windSpeed ?? 0}km/h",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
                       'assets/images/weather.png',
@@ -90,15 +124,21 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
                       textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          '${_weather?.temperature.round()}',
+                          '${_weather?.temperature.round() ?? 0}',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 30,
+                            fontSize: 36,
                           ),
                         ),
                         const Padding(
                           padding: EdgeInsets.only(top: 8),
-                          child: Text("°C"),
+                          child: Text(
+                            "°C",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
                     ),
