@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _weatherService = WeatherService('e71d0b53dfb243b161d181f13a8d99fd');
+  final _weatherService = WeatherService();
   final _currentDate = DateTime.now();
   DateTime? _lastUpdateTime;
   WeatherForecast? _forecast;
@@ -48,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Scaffold(
               key: _scaffoldKey,
               primary: true,
-              backgroundColor: Colors.transparent,
               endDrawer: const Drawer(
                 width: double.infinity,
                 child: SavedLocations(),
@@ -73,8 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
       elevation: 0,
       toolbarHeight: 10.h,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
-      foregroundColor: Colors.white,
       leading: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 24),
         child: Icon(
@@ -132,14 +129,14 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 16.h,
             ),
             Text(
-              _forecast?.currentWeather.condition ?? "",
+              _forecast?.currentWeather.condition ?? "loading",
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 30,
               ),
             ),
             Text(
-              "${_forecast?.currentWeather.temperature.round()}°C",
+              "${_forecast?.currentWeather.temperature.round() ?? 0}°C",
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 50,

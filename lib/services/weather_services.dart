@@ -7,9 +7,9 @@ import 'package:weather_app/models/weather_forecast.dart';
 class WeatherService {
   // ignore: constant_identifier_names
   static const BASE_URL = 'https://api.openweathermap.org/data/2.5';
-  final String apiKey;
+  final String apiKey = dotenv.get('OPENWEATHER_API');
 
-  WeatherService(this.apiKey);
+  WeatherService();
 
   Future<WeatherForecast> getWeatherForecast({
     required num lat,

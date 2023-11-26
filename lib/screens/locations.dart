@@ -65,20 +65,22 @@ class _SavedLocationsState extends State<SavedLocations> {
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           child: Column(
             children: [
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Saved Locations",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontSize: 20, fontWeight: FontWeight.normal),
                   ),
-                  LocationSearchbarWidget()
+                  const LocationSearchbarWidget()
                 ],
               ),
-              const SizedBox(height: 24),
               Expanded(
                 child: ListView.builder(
                   itemBuilder: (ctx, index) => SavedLocationWidget(
@@ -88,7 +90,7 @@ class _SavedLocationsState extends State<SavedLocations> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 16),
+                padding: const EdgeInsets.only(top: 20),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFAAA5A5).withOpacity(0.5),
