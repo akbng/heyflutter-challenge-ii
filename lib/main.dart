@@ -59,6 +59,9 @@ class _AppState extends State<App> {
           bodyMedium: TextStyle(
             color: Colors.white,
           ),
+          bodySmall: TextStyle(
+            color: Colors.white,
+          ),
         ),
       ),
       home: body,

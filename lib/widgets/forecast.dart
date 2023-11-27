@@ -42,12 +42,16 @@ class DailyForecastCard extends StatelessWidget {
                           ),
                     Text(
                       "${weather.temperature.round()}°C",
-                      style: const TextStyle(color: Colors.white),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     Text(
-                      "${weather.windSpeed}km/h",
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                      "${weather.windSpeed}",
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
+                    Text(
+                      "km/h",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    )
                   ],
                 ),
               )

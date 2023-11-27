@@ -21,14 +21,8 @@ class WeatherFeature extends StatelessWidget {
           size: 40,
           color: Colors.white,
         ),
-        Text(
-          featureName.toUpperCase(),
-          style: const TextStyle(color: Colors.white),
-        ),
-        Text(
-          value,
-          style: const TextStyle(color: Colors.white),
-        ),
+        Text(featureName.toUpperCase()),
+        Text(value),
       ],
     );
   }
