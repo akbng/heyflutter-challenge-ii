@@ -123,12 +123,17 @@ class _SavedLocationsState extends State<SavedLocations> {
     );
   }
 
-  void _openAddLocationOverlay(BuildContext context) {
-    showModalBottomSheet(
+  Future<void> _openAddLocationOverlay(BuildContext context) async {
+    final result = await showModalBottomSheet(
       context: context,
       useSafeArea: true,
       isScrollControlled: true,
       builder: (ctx) => const AddLocationWidget(),
     );
+    if (result != null && result.runtimeType == Location && context.mounted) {
+      setState(() {
+        _savedLocations = [..._savedLocations, result];
+      });
+    }
   }
 }

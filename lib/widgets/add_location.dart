@@ -53,11 +53,10 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
           location: location,
           image: _selectedImage,
         );
+        if (context.mounted) Navigator.of(context).pop(location);
       } catch (e) {
         print(e);
       }
-
-      if (context.mounted) Navigator.of(context).pop(_selectedLocation);
     }
   }
 
