@@ -6,6 +6,7 @@ import 'package:weather_app/models/weather_forecast.dart';
 import 'package:weather_app/screens/locations.dart';
 import 'package:weather_app/services/weather_services.dart';
 import 'package:weather_app/widgets/forecast.dart';
+import 'package:weather_app/widgets/helper/show_error_snackbar.dart';
 import 'package:weather_app/widgets/weather_parameter.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -48,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Scaffold(
               key: _scaffoldKey,
               primary: true,
+              resizeToAvoidBottomInset: true,
               endDrawer: const Drawer(
                 width: double.infinity,
                 child: SavedLocations(),
@@ -81,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       title: Padding(
         padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-        child: Text(widget.currentPos.name),
+        child: Text(widget.currentPos.name, overflow: TextOverflow.ellipsis),
       ),
       titleSpacing: 0,
       actions: [
@@ -134,13 +136,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         "assets/images/weather.png",
                         height: 16.h,
                       )
-                    : Image.network(_forecast!.currentWeather.icon!),
-                Text(
-                  _forecast?.currentWeather.condition ?? "loading",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontSize: 30, fontWeight: FontWeight.bold),
+                   : Image.network(_forecast!.currentWeather.icon!),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    _forecast?.currentWeather.condition ?? "loading",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Text(
                   "${_forecast?.currentWeather.temperature.round() ?? 0}°C",
@@ -198,13 +204,16 @@ class _HomeScreenState extends State<HomeScreen> {
         lat: latitude,
         long: longitude,
       );
-
-      setState(() {
-        _forecast = weatherForecast;
-        _lastUpdateTime = DateTime.now();
-      });
+      if (mounted) {
+        setState(() {
+          _forecast = weatherForecast;
+          _lastUpdateTime = DateTime.now();
+        });
+      }
     } catch (error) {
-      print(error);
+      if (context.mounted) {
+        showErrorSnackbar(context, error.toString().substring(11));
+      }
     }
   }
 }
