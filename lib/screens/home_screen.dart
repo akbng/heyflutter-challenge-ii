@@ -136,19 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         "assets/images/weather.png",
                         height: 16.h,
                       )
-<<<<<<< Updated upstream
-                    : Image.network(
-                        WeatherService.getIcon(
-                            iconId: _forecast!.currentWeather.icon!),
-                      ),
-                Text(
-                  _forecast?.currentWeather.condition ?? "loading",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontSize: 30, fontWeight: FontWeight.bold),
-=======
-                    : Image.network(_forecast!.currentWeather.icon!),
+                   : Image.network(_forecast!.currentWeather.icon!),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Text(
@@ -159,7 +147,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         .bodyLarge!
                         .copyWith(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
->>>>>>> Stashed changes
                 ),
                 Text(
                   "${_forecast?.currentWeather.temperature.round() ?? 0}°C",
@@ -213,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final longitude = widget.currentPos.longitude;
 
     try {
-      final weatherForecast = await _weatherService.getWeatherForecast(
+      final weatherForecast = await _weatherService.getWeatherForecastCoords(
         lat: latitude,
         long: longitude,
       );

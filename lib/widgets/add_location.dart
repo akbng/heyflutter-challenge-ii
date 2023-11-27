@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/models/location_suggestion.dart';
+import 'package:weather_app/models/location.dart';
 import 'package:weather_app/widgets/image_selection.dart';
 
 import '../models/location_image.dart';
@@ -14,13 +14,13 @@ class AddLocationWidget extends StatefulWidget {
 }
 
 class _AddLocationWidgetState extends State<AddLocationWidget> {
-  LocationSuggestion? _selectedLocation;
+  Location? _selectedLocation;
   List<LocationImage> _selectedLocationImages = [];
   LocationImage? _selectedImage;
   final _locationServices = LocationService();
   bool loadingImages = false;
 
-  void setselectedLocation(LocationSuggestion location) {
+  void setselectedLocation(Location location) {
     setState(() {
       _selectedLocation = location;
     });
@@ -34,11 +34,9 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
   }
 
   Future<void> _fetchLocationImages() async {
-<<<<<<< Updated upstream
     final images =
-        await _locationServices.getLocationImages(_selectedLocation!.cityName);
-=======
->>>>>>> Stashed changes
+        await _locationServices.getLocationImages(_selectedLocation!.name);
+
     setState(() {
       loadingImages = true;
     });
@@ -68,23 +66,18 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
   Future<void> saveSelectedLocation(BuildContext context) async {
     if (_selectedLocation != null) {
       try {
-        final location = await _locationServices
-            .getPlaceDetails(_selectedLocation!.cityName);
         await _locationServices.saveLocation(
-          location: location,
+          location: _selectedLocation!,
           image: _selectedImage,
         );
-<<<<<<< Updated upstream
+
         if (context.mounted) Navigator.of(context).pop(location);
       } catch (e) {
-        print(e);
-=======
         if (context.mounted) Navigator.of(context).pop(_selectedLocation);
       } catch (error) {
         if (context.mounted) {
           showError(context, error.toString().substring(11));
         }
->>>>>>> Stashed changes
       }
     }
   }

@@ -28,20 +28,27 @@ class _SavedLocationsState extends State<SavedLocations> {
     // TODO: do not save currentPos to the device, coz it can be shared by global state provider
     // which is already installed - GetX
     final currentPos = await StorageServices.getString('current_position');
-    final savedLocations =
-        await StorageServices.getStringList('saved_locations');
+    var savedLocations = await StorageServices.getStringList('saved_locations');
 
-    final isCurrentLocationSaved = savedLocations.contains(currentPos);
+    final pos = Location.fromJson(jsonDecode(currentPos));
+    bool isCurrentLocationSaved = savedLocations
+        .map((location) => Location.fromJson(jsonDecode(location)))
+        .any(
+          (location) =>
+              '${location.name},${location.country}'.toLowerCase() ==
+              '${pos.name},${pos.country}'.toLowerCase(),
+        );
     if (!isCurrentLocationSaved) {
+      savedLocations = [currentPos, ...savedLocations];
       StorageServices.setStringList(
         key: "saved_locations",
-        value: [currentPos, ...savedLocations],
+        value: savedLocations,
       );
     }
 
     setState(() {
       _savedLocations = savedLocations
-          .map((location) => Location.fromJson(jsonDecode("[$location]")))
+          .map((location) => Location.fromJson(jsonDecode(location)))
           .toList();
     });
   }

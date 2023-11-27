@@ -13,21 +13,13 @@ class WeatherForecast {
   });
 
   factory WeatherForecast.fromJson(Map<String, dynamic> json) {
-    List<dynamic> forecastEvery3Hrs = json['list'];
-    List<Weather> forecastEveryDays = forecastEvery3Hrs
-        .where((weatherJson) {
-          final date = DateTime.fromMillisecondsSinceEpoch(
-              weatherJson['dt'].toInt() * 1000);
-          final dayOfForecast = DateTime(2023, 11, 14);
-          return date.isAfter(dayOfForecast) && date.toUtc().hour == 0;
-        })
-        .map((weatherJson) => Weather.fromJson(weatherJson))
-        .toList();
-
     return WeatherForecast(
-      forecasts: forecastEveryDays.sublist(0, 4),
-      currentWeather: Weather.fromJson(forecastEvery3Hrs[0]),
-      location: json['city']['name'],
+      currentWeather: Weather.fromJson(json),
+      forecasts: (json['forecast']['forecastday'] as List)
+          .map((weather) => Weather.fromForcastJson(weather))
+          .where((weather) => weather.date.isAfter(DateTime.now()))
+          .toList(),
+      location: json['location']['name'],
     );
   }
 

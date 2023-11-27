@@ -120,7 +120,7 @@ class MySearchDelegate extends SearchDelegate<Location?> {
         await StorageServices.getStringList('saved_locations');
 
     return savedLocations
-        .map((location) => Location.fromJson(jsonDecode("[$location]")))
+        .map((location) => Location.fromJson(jsonDecode(location)))
         .where((location) => '${location.name}, ${location.country}'
             .toLowerCase()
             .contains(query.toLowerCase()))

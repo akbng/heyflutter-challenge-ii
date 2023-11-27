@@ -5,14 +5,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_app/models/location.dart';
 import 'package:weather_app/models/location_image.dart';
-import 'package:weather_app/models/location_suggestion.dart';
 
 import 'storage_services.dart';
 
 class LocationService {
   // ignore: constant_identifier_names
-  static const BASE_URL = 'http://api.openweathermap.org/geo/1.0';
-  final String apiKey = dotenv.get('OPENWEATHER_API');
+  static const BASE_URL = 'http://api.weatherapi.com/v1';
+  final String apiKey = dotenv.get('WEATHER_API_KEY');
 
   LocationService();
 
@@ -22,8 +21,16 @@ class LocationService {
   }) async {
     final savedLocations =
         await StorageServices.getStringList("saved_locations");
-    final locationJson = jsonEncode(location);
-    if (savedLocations.contains(locationJson)) {
+
+    bool locationIsSaved = savedLocations
+        .map((location) => Location.fromJson(jsonDecode(location)))
+        .any(
+          (savedLocation) =>
+              '${savedLocation.name},${savedLocation.country}'.toLowerCase() ==
+              '${location.name},${location.country}'.toLowerCase(),
+        );
+
+    if (locationIsSaved) {
       throw Exception("Location already saved");
     }
 
@@ -32,7 +39,7 @@ class LocationService {
     }
 
     savedLocations.add(jsonEncode(location));
-    print(savedLocations);
+
     StorageServices.setStringList(
       key: "saved_locations",
       value: savedLocations,
@@ -69,31 +76,18 @@ class LocationService {
     return position;
   }
 
-  Future<List<LocationSuggestion>> getLocationSuggestions(String query) async {
-    const baseUrl = "https://autocomplete.travelpayouts.com/places2";
+  Future<List<Location>> searchLocation(String query) async {
     final reponse = await http.get(
-      Uri.parse("$baseUrl?term=$query&types[]=city&locale=en"),
+      Uri.parse("$BASE_URL/search.json?q=$query&key=$apiKey"),
     );
     if (reponse.statusCode == 200) {
       final suggestions = jsonDecode(reponse.body);
       return (suggestions as List)
-          .map((suggestion) => LocationSuggestion.fromJson(suggestion))
+          .map((suggestion) => Location.fromJson(suggestion))
           .toList();
     }
 
     throw Exception('Error getting location suggestions');
-  }
-
-  Future<Location> getPlaceDetails(String placeName) async {
-    final response = await http.get(
-      Uri.parse('$BASE_URL/direct?q=$placeName&appid=$apiKey&limit=5'),
-    );
-
-    if (response.statusCode == 200) {
-      return Location.fromJson(jsonDecode(response.body));
-    }
-
-    throw Exception('Error getting place details');
   }
 
   Future<Location> getPlaceDetailsFromCoords({
@@ -101,11 +95,11 @@ class LocationService {
     required num long,
   }) async {
     final response = await http.get(
-      Uri.parse('$BASE_URL/reverse?lat=$lat&lon=$long&appid=$apiKey&limit=5'),
+      Uri.parse('$BASE_URL/search.json?key=$apiKey&q=$lat,$long'),
     );
 
     if (response.statusCode == 200) {
-      return Location.fromJson(jsonDecode(response.body));
+      return Location.fromJson(jsonDecode(response.body).first);
     }
 
     throw Exception('Error getting place details');
