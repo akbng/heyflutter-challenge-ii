@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/models/location.dart';
 import 'package:weather_app/screens/home_screen.dart';
 import 'package:weather_app/services/location_services.dart';
@@ -41,29 +42,7 @@ class _AppState extends State<App> {
 
     return MaterialApp(
       // default all texts to be white color
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.transparent,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
-        ),
-        cardTheme: const CardTheme(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(24)),
-          ),
-        ),
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(
-            color: Colors.white,
-          ),
-          bodyMedium: TextStyle(
-            color: Colors.white,
-          ),
-          bodySmall: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
+      theme: _buildTheme(Brightness.dark),
       home: body,
     );
   }
@@ -87,4 +66,34 @@ class _AppState extends State<App> {
       print(error);
     }
   }
+}
+
+ThemeData _buildTheme(Brightness brightness) {
+  final baseTheme = ThemeData(
+    scaffoldBackgroundColor: Colors.transparent,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.transparent,
+      foregroundColor: Colors.white,
+    ),
+    cardTheme: const CardTheme(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(24)),
+      ),
+    ),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(
+        color: Colors.white,
+      ),
+      bodyMedium: TextStyle(
+        color: Colors.white,
+      ),
+      bodySmall: TextStyle(
+        color: Colors.white,
+      ),
+    ),
+  );
+
+  return baseTheme.copyWith(
+    textTheme: GoogleFonts.robotoTextTheme(baseTheme.textTheme),
+  );
 }
