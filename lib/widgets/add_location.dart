@@ -34,9 +34,6 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
   }
 
   Future<void> _fetchLocationImages() async {
-    final images =
-        await _locationServices.getLocationImages(_selectedLocation!.name);
-
     setState(() {
       loadingImages = true;
     });
@@ -71,8 +68,6 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
           image: _selectedImage,
         );
 
-        if (context.mounted) Navigator.of(context).pop(location);
-      } catch (e) {
         if (context.mounted) Navigator.of(context).pop(_selectedLocation);
       } catch (error) {
         if (context.mounted) {
