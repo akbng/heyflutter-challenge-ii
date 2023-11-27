@@ -102,78 +102,93 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody() {
-    return ListView(
-      children: [
-        Column(
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: SizedBox(
+        height: 85.h,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(
-              DateFormat('MMMM dd').format(_currentDate),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 30,
-              ),
-            ),
-            Text(
-              "Updated ${DateFormat('dd/M/yyyy hh:mm a').format(_lastUpdateTime ?? _currentDate)}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-              ),
-            ),
-          ],
-        ),
-        Column(
-          children: [
-            _forecast?.currentWeather.icon == null
-                ? Image.asset(
-                    "assets/images/weather.png",
-                    height: 16.h,
-                  )
-                : Image.network(
-                    WeatherService.getIcon(
-                        iconId: _forecast!.currentWeather.icon!),
+            Column(
+              children: [
+                Text(
+                  DateFormat('MMMM dd').format(_currentDate),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
                   ),
-            Text(
-              _forecast?.currentWeather.condition ?? "loading",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 30,
-              ),
+                ),
+                Text(
+                  "Updated ${DateFormat('dd/M/yyyy hh:mm a').format(_lastUpdateTime ?? _currentDate)}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              "${_forecast?.currentWeather.temperature.round() ?? 0}°C",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 50,
-              ),
+            Column(
+              children: [
+                _forecast?.currentWeather.icon == null
+                    ? Image.asset(
+                        "assets/images/weather.png",
+                        height: 16.h,
+                      )
+                    : Image.network(
+                        WeatherService.getIcon(
+                            iconId: _forecast!.currentWeather.icon!),
+                      ),
+                Text(
+                  _forecast?.currentWeather.condition ?? "loading",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "${_forecast?.currentWeather.temperature.round() ?? 0}°C",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(fontSize: 56, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      WeatherFeature(
+                        icon: Icons.water_drop_outlined,
+                        featureName: "humidity",
+                        value:
+                            "${_forecast?.currentWeather.humidity.toInt() ?? 0}%",
+                      ),
+                      WeatherFeature(
+                        icon: Icons.air_outlined,
+                        featureName: "wind speed",
+                        value:
+                            "${_forecast?.currentWeather.windSpeed ?? 0}km/h",
+                      ),
+                      WeatherFeature(
+                        icon: Icons.thermostat_outlined,
+                        featureName: "feels like",
+                        value:
+                            "${_forecast?.currentWeather.realFeel.round() ?? 0}°C",
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                DailyForecastCard(forecast: _forecast?.forecasts ?? []),
+              ],
+            )
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              WeatherFeature(
-                icon: Icons.water_drop_outlined,
-                featureName: "humidity",
-                value: "${_forecast?.currentWeather.humidity.toInt() ?? 0}%",
-              ),
-              WeatherFeature(
-                icon: Icons.air_outlined,
-                featureName: "wind speed",
-                value: "${_forecast?.currentWeather.windSpeed ?? 0}km/h",
-              ),
-              WeatherFeature(
-                icon: Icons.thermostat_outlined,
-                featureName: "feels like",
-                value: "${_forecast?.currentWeather.realFeel.round() ?? 0}°C",
-              ),
-            ],
-          ),
-        ),
-        DailyForecastCard(forecast: _forecast?.forecasts ?? []),
-      ],
+      ),
     );
   }
 
