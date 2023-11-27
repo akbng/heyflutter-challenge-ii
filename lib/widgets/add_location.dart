@@ -18,6 +18,7 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
   List<LocationImage> _selectedLocationImages = [];
   LocationImage? _selectedImage;
   final _locationServices = LocationService();
+  bool loadingImages = false;
 
   void setselectedLocation(LocationSuggestion location) {
     setState(() {
@@ -33,11 +34,31 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
   }
 
   Future<void> _fetchLocationImages() async {
+<<<<<<< Updated upstream
     final images =
         await _locationServices.getLocationImages(_selectedLocation!.cityName);
+=======
+>>>>>>> Stashed changes
     setState(() {
-      _selectedLocationImages = images;
+      loadingImages = true;
     });
+    try {
+      final images =
+          await _locationServices.getLocationImages(_selectedLocation!.name);
+      setState(() {
+        _selectedLocationImages = images;
+      });
+    } catch (error) {
+      if (context.mounted) {
+        showError(context, error.toString().substring(11));
+      }
+    } finally {
+      if (context.mounted) {
+        setState(() {
+          loadingImages = true;
+        });
+      }
+    }
   }
 
   void onCancel() {
@@ -53,11 +74,36 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
           location: location,
           image: _selectedImage,
         );
+<<<<<<< Updated upstream
         if (context.mounted) Navigator.of(context).pop(location);
       } catch (e) {
         print(e);
+=======
+        if (context.mounted) Navigator.of(context).pop(_selectedLocation);
+      } catch (error) {
+        if (context.mounted) {
+          showError(context, error.toString().substring(11));
+        }
+>>>>>>> Stashed changes
       }
     }
+  }
+
+  void showError(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(message),
+        actions: [
+          TextButton(
+            child: const Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -96,19 +142,21 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
                       images: _selectedLocationImages,
                       onSelect: setSelectedImage,
                     )
-                  : const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.error_outline_rounded,
-                            size: 48,
-                            color: Colors.white,
-                          ),
-                          SizedBox(height: 20),
-                          Text("Please select a location first"),
-                        ],
-                      ),
+                  : Center(
+                      child: loadingImages
+                          ? const CircularProgressIndicator()
+                          : const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.error_outline_rounded,
+                                  size: 48,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(height: 20),
+                                Text("Please select a location first"),
+                              ],
+                            ),
                     ),
             ),
             const SizedBox(height: 16),

@@ -68,6 +68,13 @@ class _LocationAutoCompleteWidgetState
           FocusNode focusNode,
           VoidCallback onFieldSubmitted) {
         return TextField(
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Search for a location...',
+            filled: true,
+            fillColor: Colors.white30,
+            hintStyle: TextStyle(color: Colors.white60),
+          ),
           controller: textEditingController,
           focusNode: focusNode,
           onSubmitted: (text) {

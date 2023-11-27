@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/widgets/helper/show_error_snackbar.dart';
 
 import '../models/location.dart';
 import '../models/weather.dart';
@@ -44,7 +45,10 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
         });
       }
     } catch (error) {
-      print(error);
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        showErrorSnackbar(context, error.toString().substring(11));
+      }
     }
   }
 
@@ -79,11 +83,13 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
-                      Text(_weather?.condition ?? "",
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  )),
+                      Text(
+                        _weather?.condition ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
                       const SizedBox(height: 20),
                       Row(
                         children: [
