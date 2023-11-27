@@ -41,7 +41,7 @@ class _SavedLocationsState extends State<SavedLocations> {
 
     setState(() {
       _savedLocations = savedLocations
-          .map((location) => Location.fromJson(jsonDecode("[$location]")))
+          .map((location) => Location.fromJson(jsonDecode(location)))
           .toList();
     });
   }

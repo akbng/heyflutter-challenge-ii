@@ -7,21 +7,15 @@ import 'package:weather_app/models/weather_forecast.dart';
 
 class WeatherService {
   // ignore: constant_identifier_names
-  static const BASE_URL = 'https://api.openweathermap.org/data/2.5';
-  final String apiKey = dotenv.get('OPENWEATHER_API');
+  static const BASE_URL = 'http://api.weatherapi.com/v1';
+  final String apiKey = dotenv.get('WEATHER_API_KEY');
 
   WeatherService();
 
-  static String getIcon({String iconId = '01d'}) =>
-      'https://openweathermap.org/img/wn/$iconId@2x.png';
-
-  Future<WeatherForecast> getWeatherForecast({
-    required num lat,
-    required num long,
-  }) async {
+  Future<WeatherForecast> getWeatherForecast(String locationId) async {
     final response = await http.get(
       Uri.parse(
-          '$BASE_URL/forecast?lat=$lat&lon=$long&appid=$apiKey&units=metric'),
+          '$BASE_URL/forecast.json?key=$apiKey&q=$locationId&days=5&aqi=no&alerts=no'),
     );
 
     if (response.statusCode == 200) {
@@ -31,14 +25,51 @@ class WeatherService {
     throw Exception('Error getting weathers');
   }
 
-  Future<Weather> getCurrentWeather({
+  Future<WeatherForecast> getWeatherForecastCoords({
     required num lat,
     required num long,
   }) async {
     final response = await http.get(
       Uri.parse(
-          '$BASE_URL/weather?lat=$lat&lon=$long&appid=$apiKey&units=metric'),
+          '$BASE_URL/forecast.json?key=$apiKey&q=$lat,$long&days=5&aqi=no&alerts=no'),
     );
+
+    if (response.statusCode == 200) {
+      return WeatherForecast.fromJson(jsonDecode(response.body));
+    }
+
+    throw Exception('Error getting weathers');
+  }
+
+  Future<Weather> getCurrentWeather(String locationId) async {
+    final response = await http.get(
+        Uri.parse('$BASE_URL/current.json?key=$apiKey&q=$locationId&aqi=no'));
+
+    if (response.statusCode == 200) {
+      return Weather.fromJson(jsonDecode(response.body));
+    }
+
+    throw Exception('Error getting weathers');
+  }
+
+  Future<Weather> getCurrentWeatherCoords({
+    required num lat,
+    required num long,
+  }) async {
+    final response = await http.get(
+        Uri.parse('$BASE_URL/current.json?key=$apiKey&q=$lat,$long&aqi=no'));
+
+    if (response.statusCode == 200) {
+      return Weather.fromJson(jsonDecode(response.body));
+    }
+
+    throw Exception('Error getting weathers');
+  }
+
+  // avoid this function - can cause trouble with city names
+  Future<Weather> getCurrentWeatherCity(String cityName) async {
+    final response = await http.get(
+        Uri.parse('$BASE_URL/current.json?key=$apiKey&q=$cityName&aqi=no'));
 
     if (response.statusCode == 200) {
       return Weather.fromJson(jsonDecode(response.body));

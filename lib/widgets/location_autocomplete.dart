@@ -1,15 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:weather_app/models/location_suggestion.dart';
 import 'package:weather_app/services/location_services.dart';
+
+import '../models/location.dart';
 
 const Duration debounceDuration = Duration(milliseconds: 500);
 
 class LocationAutoCompleteWidget extends StatefulWidget {
   const LocationAutoCompleteWidget({super.key, required this.handleSelection});
 
-  final void Function(LocationSuggestion) handleSelection;
+  final void Function(Location) handleSelection;
 
   @override
   State<LocationAutoCompleteWidget> createState() =>
@@ -24,14 +25,13 @@ class _LocationAutoCompleteWidgetState
   final _locationServices = LocationService();
 
   // The most recent options received from the API.
-  late Iterable<LocationSuggestion> _lastOptions = <LocationSuggestion>[];
+  late Iterable<Location> _lastOptions = [];
 
-  late final _Debounceable<Iterable<LocationSuggestion>?, String>
-      _debouncedSearch;
+  late final _Debounceable<Iterable<Location>?, String> _debouncedSearch;
 
   // Calls the "remote" API to search with the given query. Returns null when
   // the call has been made obsolete.
-  Future<Iterable<LocationSuggestion>?> _search(String query) async {
+  Future<Iterable<Location>?> _search(String query) async {
     _currentQuery = query;
 
     if (query.isEmpty) {
@@ -39,8 +39,8 @@ class _LocationAutoCompleteWidgetState
     }
 
     // In a real application, there should be some error handling here.
-    final List<LocationSuggestion> options =
-        await _locationServices.getLocationSuggestions(query);
+    final List<Location> options =
+        await _locationServices.searchLocation(query);
 
     // If another search happened after this one, throw away these options.
     if (_currentQuery != query) {
@@ -54,15 +54,13 @@ class _LocationAutoCompleteWidgetState
   @override
   void initState() {
     super.initState();
-    _debouncedSearch =
-        _debounce<Iterable<LocationSuggestion>?, String>(_search);
+    _debouncedSearch = _debounce<Iterable<Location>?, String>(_search);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Autocomplete<LocationSuggestion>(
-      displayStringForOption: (option) =>
-          "${option.cityName}, ${option.country}",
+    return Autocomplete<Location>(
+      displayStringForOption: (option) => "${option.name}, ${option.country}",
       fieldViewBuilder: (BuildContext context,
           TextEditingController textEditingController,
           FocusNode focusNode,
@@ -76,8 +74,8 @@ class _LocationAutoCompleteWidgetState
         );
       },
       optionsViewBuilder: (BuildContext context,
-          AutocompleteOnSelected<LocationSuggestion> onSelected,
-          Iterable<LocationSuggestion> options) {
+          AutocompleteOnSelected<Location> onSelected,
+          Iterable<Location> options) {
         return Align(
           alignment: Alignment.topLeft,
           child: Material(
@@ -94,7 +92,7 @@ class _LocationAutoCompleteWidgetState
                       onSelected(option);
                     },
                     child: ListTile(
-                      title: Text(option.cityName),
+                      title: Text(option.name),
                       subtitle: Text(option.country),
                     ),
                   );
@@ -105,7 +103,7 @@ class _LocationAutoCompleteWidgetState
         );
       },
       optionsBuilder: (TextEditingValue textEditingValue) async {
-        final Iterable<LocationSuggestion>? options =
+        final Iterable<Location>? options =
             await _debouncedSearch(textEditingValue.text);
         if (options == null) {
           return _lastOptions;
@@ -113,7 +111,7 @@ class _LocationAutoCompleteWidgetState
         _lastOptions = options;
         return options;
       },
-      onSelected: (LocationSuggestion selection) {
+      onSelected: (Location selection) {
         widget.handleSelection(selection);
       },
     );

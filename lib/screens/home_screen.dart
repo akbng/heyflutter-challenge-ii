@@ -134,10 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         "assets/images/weather.png",
                         height: 16.h,
                       )
-                    : Image.network(
-                        WeatherService.getIcon(
-                            iconId: _forecast!.currentWeather.icon!),
-                      ),
+                    : Image.network(_forecast!.currentWeather.icon!),
                 Text(
                   _forecast?.currentWeather.condition ?? "loading",
                   style: Theme.of(context)
@@ -197,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final longitude = widget.currentPos.longitude;
 
     try {
-      final weatherForecast = await _weatherService.getWeatherForecast(
+      final weatherForecast = await _weatherService.getWeatherForecastCoords(
         lat: latitude,
         long: longitude,
       );

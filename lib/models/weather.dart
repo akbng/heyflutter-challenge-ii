@@ -26,40 +26,49 @@ class Weather {
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) {
+    final currentWeather = json['current'];
     return Weather(
-      condition: json['weather'][0]['main'],
-      temperature: json['main']['temp'].toDouble(),
-      humidity: json['main']['humidity'].toDouble(),
-      pressure: json['main']['pressure'].toDouble(),
-      windSpeed: json['wind']['speed'].toDouble(),
-      realFeel: json['main']['feels_like'].toDouble(),
-      date: DateTime.fromMillisecondsSinceEpoch(json['dt'].toInt() * 1000),
-      minTemp: json['main']?['temp_min']?.toDouble(),
-      maxTemp: json['main']?['temp_max']?.toDouble(),
-      icon: json['weather'][0]['icon'],
-      conditionId: json['weather'][0]['id'],
+      condition: currentWeather['condition']['text'],
+      icon: 'https:${currentWeather['condition']['icon']}',
+      conditionId: currentWeather['condition']['code'],
+      temperature: currentWeather['temp_c'].toDouble(),
+      humidity: currentWeather['humidity'].toDouble(),
+      pressure: currentWeather['pressure_mb'].toDouble(),
+      windSpeed: currentWeather['wind_kph'].toDouble(),
+      realFeel: currentWeather['feelslike_c'].toDouble(),
+      date: DateTime.fromMillisecondsSinceEpoch(
+          currentWeather['last_updated_epoch'].toInt() * 1000),
+    );
+  }
+
+  factory Weather.fromForcastJson(Map<String, dynamic> json) {
+    return Weather(
+      condition: json['day']['condition']['text'],
+      icon: 'https:${json['day']['condition']['icon']}',
+      conditionId: json['day']['condition']['code'],
+      temperature: json['day']['avgtemp_c'].toDouble(),
+      humidity: json['day']['avghumidity'].toDouble(),
+      pressure: json['hour'][0]['pressure_mb'].toDouble(),
+      windSpeed: json['day']['maxwind_kph'].toDouble(),
+      realFeel: json['day']['avgtemp_c'].toDouble(),
+      date: DateTime.fromMillisecondsSinceEpoch(
+          json['date_epoch'].toInt() * 1000),
+      minTemp: json['day']['mintemp_c'].toDouble(),
+      maxTemp: json['day']['maxtemp_c'].toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'weather': [
-        {
-          'main': condition,
-          'icon': icon,
-          'id': conditionId,
-        }
-      ],
-      'main': {
-        'temp': temperature,
-        'humidity': humidity,
-        'pressure': pressure,
-        'feels_like': realFeel,
-      },
-      'wind': {
-        'speed': windSpeed,
-      },
-      'dt': date.millisecondsSinceEpoch ~/ 1000,
+      'condition': condition,
+      'icon': icon,
+      'conditionId': conditionId,
+      'temperature': temperature,
+      'humidity': humidity,
+      'pressure': pressure,
+      'windSpeed': windSpeed,
+      'realFeel': realFeel,
+      'date': date.toIso8601String(),
     };
   }
 }

@@ -33,7 +33,7 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
     final longitude = widget.savedLocation.longitude;
 
     try {
-      final currentWeather = await _weatherService.getCurrentWeather(
+      final currentWeather = await _weatherService.getCurrentWeatherCoords(
         lat: latitude,
         long: longitude,
       );
@@ -120,10 +120,7 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
                             "assets/images/weather.png",
                             height: 30,
                           )
-                        : Image.network(
-                            WeatherService.getIcon(iconId: _weather!.icon!),
-                            height: 50,
-                          ),
+                        : Image.network(_weather!.icon!, height: 50),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       textBaseline: TextBaseline.alphabetic,

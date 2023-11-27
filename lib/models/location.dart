@@ -1,4 +1,5 @@
 class Location {
+  final String id;
   final String name;
   final num latitude;
   final num longitude;
@@ -8,6 +9,7 @@ class Location {
   String? image;
 
   Location({
+    required this.id,
     required this.name,
     required this.latitude,
     required this.longitude,
@@ -25,23 +27,25 @@ class Location {
 
   factory Location.fromJson(dynamic json) {
     return Location(
-      name: json[0]['name'],
-      latitude: json[0]['lat'],
-      longitude: json[0]['lon'],
-      country: json[0]['country'],
-      state: json[0]['state'],
-      image: json[0]['image'],
-      imageHash: json[0]['image_hash'],
+      id: json['id'].toString(),
+      name: json['name'],
+      latitude: json['lat'],
+      longitude: json['lon'],
+      country: json['country'],
+      state: json['region'],
+      image: json['image'],
+      imageHash: json['image_hash'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'lat': latitude,
       'lon': longitude,
       'country': country,
-      'state': state,
+      'region': state,
       'image': image,
       'image_hash': imageHash
     };
