@@ -28,14 +28,14 @@ class _SavedLocationsState extends State<SavedLocations> {
     // TODO: do not save currentPos to the device, coz it can be shared by global state provider
     // which is already installed - GetX
     final currentPos = await StorageServices.getString('current_position');
-    final savedLocations =
-        await StorageServices.getStringList('saved_locations');
+    var savedLocations = await StorageServices.getStringList('saved_locations');
 
     final isCurrentLocationSaved = savedLocations.contains(currentPos);
     if (!isCurrentLocationSaved) {
+      savedLocations = [currentPos, ...savedLocations];
       StorageServices.setStringList(
         key: "saved_locations",
-        value: [currentPos, ...savedLocations],
+        value: savedLocations,
       );
     }
 
