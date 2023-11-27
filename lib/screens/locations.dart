@@ -30,7 +30,14 @@ class _SavedLocationsState extends State<SavedLocations> {
     final currentPos = await StorageServices.getString('current_position');
     var savedLocations = await StorageServices.getStringList('saved_locations');
 
-    final isCurrentLocationSaved = savedLocations.contains(currentPos);
+    final pos = Location.fromJson(jsonDecode(currentPos));
+    bool isCurrentLocationSaved = savedLocations
+        .map((location) => Location.fromJson(jsonDecode(location)))
+        .any(
+          (location) =>
+              '${location.name},${location.country}'.toLowerCase() ==
+              '${pos.name},${pos.country}'.toLowerCase(),
+        );
     if (!isCurrentLocationSaved) {
       savedLocations = [currentPos, ...savedLocations];
       StorageServices.setStringList(

@@ -22,7 +22,15 @@ class LocationService {
     final savedLocations =
         await StorageServices.getStringList("saved_locations");
 
-    if (savedLocations.contains(location.name)) {
+    bool locationIsSaved = savedLocations
+        .map((location) => Location.fromJson(jsonDecode(location)))
+        .any(
+          (savedLocation) =>
+              '${savedLocation.name},${savedLocation.country}'.toLowerCase() ==
+              '${location.name},${location.country}'.toLowerCase(),
+        );
+
+    if (locationIsSaved) {
       throw Exception("Location already saved");
     }
 
