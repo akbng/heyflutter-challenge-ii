@@ -61,4 +61,14 @@ class StorageServices {
     final prefs = await _instance;
     prefs.setDouble(key, value);
   }
+
+  static Future<void> clearAll() async {
+    final prefs = await _instance;
+    prefs.clear();
+  }
+
+  static Future<void> clear(String key) async {
+    final prefs = await _instance;
+    prefs.remove(key);
+  }
 }

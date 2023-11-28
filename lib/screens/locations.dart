@@ -92,6 +92,9 @@ class _SavedLocationsState extends State<SavedLocations> {
                 child: ListView.builder(
                   itemBuilder: (ctx, index) => SavedLocationWidget(
                     savedLocation: _savedLocations[index],
+                    refreshLocations: () {
+                      _fetchSavedLocations();
+                    },
                   ),
                   itemCount: _savedLocations.length,
                 ),

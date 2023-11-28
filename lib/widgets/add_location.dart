@@ -7,7 +7,9 @@ import '../services/location_services.dart';
 import 'location_autocomplete.dart';
 
 class AddLocationWidget extends StatefulWidget {
-  const AddLocationWidget({super.key});
+  final Location? location;
+
+  const AddLocationWidget({super.key, this.location});
 
   @override
   State<AddLocationWidget> createState() => _AddLocationWidgetState();
@@ -34,24 +36,29 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
   }
 
   Future<void> _fetchLocationImages() async {
-    setState(() {
-      loadingImages = true;
-    });
-    try {
-      final images =
-          await _locationServices.getLocationImages(_selectedLocation!.name);
+    final location = widget.location ?? _selectedLocation;
+
+    if (location == null) {
+      showError(context, "no location set");
+    } else {
       setState(() {
-        _selectedLocationImages = images;
+        loadingImages = true;
       });
-    } catch (error) {
-      if (context.mounted) {
-        showError(context, error.toString().substring(11));
-      }
-    } finally {
-      if (context.mounted) {
+      try {
+        final images = await _locationServices.getLocationImages(location.name);
         setState(() {
-          loadingImages = true;
+          _selectedLocationImages = images;
         });
+      } catch (error) {
+        if (context.mounted) {
+          showError(context, error.toString().substring(11));
+        }
+      } finally {
+        if (context.mounted) {
+          setState(() {
+            loadingImages = false;
+          });
+        }
       }
     }
   }
@@ -61,18 +68,37 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
   }
 
   Future<void> saveSelectedLocation(BuildContext context) async {
-    if (_selectedLocation != null) {
-      try {
-        await _locationServices.saveLocation(
-          location: _selectedLocation!,
-          image: _selectedImage,
-        );
+    try {
+      if (_selectedLocation == null) {
+        throw Exception("Please select a location first!");
+      }
+      await _locationServices.saveLocation(
+        location: _selectedLocation!,
+        image: _selectedImage,
+      );
 
-        if (context.mounted) Navigator.of(context).pop(_selectedLocation);
-      } catch (error) {
-        if (context.mounted) {
-          showError(context, error.toString().substring(11));
-        }
+      if (context.mounted) Navigator.of(context).pop(_selectedLocation);
+    } catch (error) {
+      if (context.mounted) {
+        showError(context, error.toString().substring(11));
+      }
+    }
+  }
+
+  Future<void> updateLocation(BuildContext context) async {
+    try {
+      if (_selectedImage == null) throw Exception("Please select an Image");
+      await _locationServices.updateLocation(
+        location: widget.location!,
+        image: _selectedImage!,
+      );
+
+      var newLoc = widget.location!;
+      newLoc.setImage(_selectedImage!.url, _selectedImage!.blurHash);
+      if (context.mounted) Navigator.of(context).pop(newLoc);
+    } catch (error) {
+      if (context.mounted) {
+        showError(context, error.toString().substring(11));
       }
     }
   }
@@ -92,6 +118,12 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.location != null) _fetchLocationImages();
   }
 
   @override
@@ -116,11 +148,12 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
         child: Column(
           children: [
             Text(
-              "Add Location",
+              "${widget.location == null ? 'Add' : 'Update'} Location",
               style:
                   Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 24),
             ),
-            LocationAutoCompleteWidget(handleSelection: setselectedLocation),
+            if (widget.location == null)
+              LocationAutoCompleteWidget(handleSelection: setselectedLocation),
             const SizedBox(height: 16),
             Text("Select Image:", style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 16),
@@ -133,16 +166,18 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
                   : Center(
                       child: loadingImages
                           ? const CircularProgressIndicator()
-                          : const Column(
+                          : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.error_outline_rounded,
                                   size: 48,
                                   color: Colors.white,
                                 ),
-                                SizedBox(height: 20),
-                                Text("Please select a location first"),
+                                const SizedBox(height: 20),
+                                Text(widget.location == null
+                                    ? "Please select a location first"
+                                    : "Could not find an Image!"),
                               ],
                             ),
                     ),
@@ -153,10 +188,14 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
               children: [
                 ElevatedButton.icon(
                   onPressed: () {
-                    saveSelectedLocation(context);
+                    if (widget.location == null) {
+                      saveSelectedLocation(context);
+                    } else {
+                      updateLocation(context);
+                    }
                   },
                   icon: const Icon(Icons.check_circle_outlined),
-                  label: const Text("Save"),
+                  label: Text(widget.location == null ? "Save" : "Update"),
                 ),
                 ElevatedButton.icon(
                   onPressed: onCancel,

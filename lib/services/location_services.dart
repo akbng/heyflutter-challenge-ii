@@ -46,6 +46,44 @@ class LocationService {
     );
   }
 
+  Future<void> clearLocation(Location location) async {
+    final savedLocations =
+        await StorageServices.getStringList("saved_locations");
+
+    final filteredLocations = savedLocations
+        .map((location) => Location.fromJson(jsonDecode(location)))
+        .where((savedLocation) => savedLocation.id != location.id)
+        .map((location) => jsonEncode(location))
+        .toList();
+
+    StorageServices.setStringList(
+      key: "saved_locations",
+      value: filteredLocations,
+    );
+  }
+
+  Future<void> updateLocation(
+      {required Location location, required LocationImage image}) async {
+    final savedLocations =
+        await StorageServices.getStringList("saved_locations");
+
+    final filteredLocations = savedLocations
+        .map((loc) {
+          var savedLocation = Location.fromJson(jsonDecode(loc));
+          if (savedLocation.id == location.id) {
+            savedLocation.setImage(image.url, image.blurHash);
+          }
+          return savedLocation;
+        })
+        .map((location) => jsonEncode(location))
+        .toList();
+
+    StorageServices.setStringList(
+      key: "saved_locations",
+      value: filteredLocations,
+    );
+  }
+
   Future<List<LocationImage>> getLocationImages(String query) async {
     final clientId = dotenv.get('UNSPLASH_CLIENT_ID');
     const baseUrl = "https://api.unsplash.com";

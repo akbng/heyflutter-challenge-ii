@@ -14,6 +14,8 @@ For quick installation check [releases](https://github.com/akbng/heyflutter-chal
 - Let the user choose custom images for their chosen location.
 - Show the current weather and forecast for that location.
 - Search from the saved location.
+- Let the user update the location background.
+- Deleting a saved location.
 
 ## Screen Recordings
 
@@ -27,13 +29,11 @@ If the video is not playing, try to download and run it locally.
 - [x] The Current location was saved twice.
 - [x] Adding a new location does not appear immediately on the drawer.
 - [x] No error messages were shown to the user.
-- [ ] Image searching sometimes gets stuck in the loading state.
+- [x] Image searching sometimes gets stuck in the loading state.
 - [ ] The codebase is super messy and deliberately needs a refactor.
 
 ## Possible Enhancements
 
-- Let the user update the location background.
-- Deleting a saved location.
 - UX improvements on the add location screen.
 - Better loading indicators while weather information is fetched - like skeleton animations.
 - The initial loading screen.
