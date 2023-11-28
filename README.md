@@ -3,7 +3,7 @@
 ![weather icons](https://i.imgur.com/CzZNbV0.jpg)
 
 A weather map made with [Flutter](https://flutter.dev) and a design provided by [heyflutter.com](https://heyflutter.com) as a coding challenge.
-For quick installation check on the releases tag - the Android apk will be attached to it.
+For quick installation check [releases](https://github.com/akbng/heyflutter-challenge-ii/releases) - the Android apk will be attached to it.
 
 ## Features
 
@@ -18,6 +18,8 @@ For quick installation check on the releases tag - the Android apk will be attac
 ## Screen Recordings
 
 https://github.com/akbng/heyflutter-challenge-ii/assets/91788199/078e64f2-c802-49f2-9b61-17543135b6ed
+
+If the video is not playing, try to download and run it locally.
 
 ## Known Issues/Bugs
 
