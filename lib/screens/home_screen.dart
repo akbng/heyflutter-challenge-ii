@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
+import 'package:weather_app/core/utils/date_time_utils.dart';
 import 'package:weather_app/models/location.dart';
 import 'package:weather_app/models/weather_forecast.dart';
 import 'package:weather_app/screens/locations.dart';
@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _weatherService = WeatherService();
   final _currentDate = DateTime.now();
-  DateTime? _lastUpdateTime;
+  DateTime _lastUpdateTime = DateTime.now();
   WeatherForecast? _forecast;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -114,14 +114,14 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               children: [
                 Text(
-                  DateFormat('MMMM dd').format(_currentDate),
+                  _currentDate.format('MMMM dd'),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 30,
                   ),
                 ),
                 Text(
-                  "Updated ${DateFormat('dd/M/yyyy hh:mm a').format(_lastUpdateTime ?? _currentDate)}",
+                  "Updated ${_lastUpdateTime.format('dd/M/yyyy hh:mm a')}",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 15,

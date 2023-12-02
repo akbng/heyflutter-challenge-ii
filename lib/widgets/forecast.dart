@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:weather_app/core/utils/date_time_utils.dart';
 import 'package:weather_app/models/weather.dart';
 
 class DailyForecastCard extends StatelessWidget {
@@ -26,7 +26,7 @@ class DailyForecastCard extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      DateFormat('E dd').format(weather.date),
+                      weather.date.format('E dd'),
                       style: const TextStyle(color: Colors.white),
                     ),
                     weather.icon == null

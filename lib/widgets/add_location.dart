@@ -148,7 +148,9 @@ class _AddLocationWidgetState extends State<AddLocationWidget> {
         child: Column(
           children: [
             Text(
-              "${widget.location == null ? 'Add' : 'Update'} Location",
+              widget.location == null
+                  ? 'Add Location'
+                  : 'Update ${widget.location!.name}',
               style:
                   Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 24),
             ),
