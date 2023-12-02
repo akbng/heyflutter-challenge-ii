@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:weather_app/services/location_services.dart';
 import 'package:weather_app/widgets/helper/show_error_snackbar.dart';
 
@@ -61,6 +62,7 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        Feedback.forTap(context);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (ctx) => HomeScreen(
@@ -70,6 +72,7 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
         );
       },
       onLongPress: () {
+        Feedback.forLongPress(context);
         setState(() {
           showUpdate = true;
         });
@@ -207,7 +210,12 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
                             ),
                             const Text("update")
                           ],
-                        ),
+                        )
+                            .animate()
+                            .fadeIn(duration: const Duration(milliseconds: 375))
+                            .slideX(
+                                duration: const Duration(milliseconds: 375),
+                                begin: 0.5),
                         const SizedBox(width: 24),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -223,7 +231,8 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
                             ),
                             const Text("cancel")
                           ],
-                        ),
+                        ).animate().fadeIn(
+                            duration: const Duration(milliseconds: 375)),
                         const SizedBox(width: 24),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -239,7 +248,12 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
                             ),
                             const Text("delete")
                           ],
-                        ),
+                        )
+                            .animate()
+                            .fadeIn(duration: const Duration(milliseconds: 375))
+                            .slideX(
+                                duration: const Duration(milliseconds: 375),
+                                begin: -0.5),
                       ],
                     ),
                   ),
