@@ -131,12 +131,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Column(
               children: [
-                _forecast?.currentWeather.icon == null
-                    ? Image.asset(
-                        "assets/images/weather.png",
-                        height: 16.h,
-                      )
-                   : Image.network(_forecast!.currentWeather.icon!),
+                Image.network(
+                  _forecast?.currentWeather.icon ?? "",
+                  errorBuilder: (context, error, stackTrace) {
+                    debugPrint(error.toString());
+                    return Image.asset(
+                      "assets/images/weather.png",
+                      height: 16.h,
+                    );
+                  },
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Text(

@@ -153,7 +153,12 @@ class _SavedLocationWidgetState extends State<SavedLocationWidget> {
                                 "assets/images/weather.png",
                                 height: 30,
                               )
-                            : Image.network(_weather!.icon!, height: 50),
+                            : Image.network(
+                                _weather!.icon!,
+                                height: 50,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.error_outline_outlined),
+                              ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           textBaseline: TextBaseline.alphabetic,

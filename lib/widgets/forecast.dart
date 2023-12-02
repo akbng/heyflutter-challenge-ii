@@ -34,7 +34,12 @@ class DailyForecastCard extends StatelessWidget {
                             "assets/images/weather.png",
                             height: 30,
                           )
-                        : Image.network(weather.icon!, height: 50),
+                        : Image.network(
+                            weather.icon!,
+                            height: 50,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.error_outline_outlined),
+                          ),
                     Text(
                       "${weather.temperature.round()}°C",
                       style: Theme.of(context).textTheme.bodyLarge,
