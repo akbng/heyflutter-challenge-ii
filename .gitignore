@@ -48,3 +48,6 @@ app.*.map.json
 
 # Environment Files
 *.env
+
+# Vim session files
+*.vim
